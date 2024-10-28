@@ -1,4 +1,13 @@
 <?php
+header("Access-Control-Allow-Origin: *"); // Allow requests from any origin
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS"); // Allow specific methods
+header("Access-Control-Allow-Headers: Content-Type"); // Allow specific headers
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+header('Content-Type: application/json');
+
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -7,7 +16,7 @@ $dbname = "test_db";
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die(json_encode(["error" => "Connection failed: " . $conn->connect_error]));
 }
 
 $action = $_GET['action'] ?? '';
@@ -57,4 +66,3 @@ if ($action == 'create') {
 }
 
 $conn->close();
-?>

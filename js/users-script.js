@@ -1,13 +1,13 @@
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function() {
     let currentPage = 1;
 
     function loadUsers(page = 1, search = '') {
         $.ajax({
-            url: 'user_api.php?action=list',
+            url: 'http://localhost/user_app/user_api.php?action=list&page=1&search=',
             type: 'GET',
-            data: { page, search },
-            success: function(data) {
-                const users = JSON.parse(data);
+            success: function(users) {
+                $('#userTableBody').empty();
+        
                 users.forEach(user => {
                     $('#userTableBody').append(`
                         <tr>
@@ -20,27 +20,71 @@ $(document).ready(function() {
                         </tr>
                     `);
                 });
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX Error: ", status, error);
+                console.log(xhr.responseText);
             }
         });
     }
 
-    $('#loadMoreBtn').click(function() {
+    document.getElementById('loadMoreBtn').addEventListener('click', function() {
         currentPage++;
-        loadUsers(currentPage, $('#searchInput').val());
+        loadUsers(currentPage, document.getElementById('searchInput').value);
     });
 
-    $('#searchInput').on('input', function() {
-        $('#userTableBody').html('');
-        loadUsers(1, $(this).val());
+    document.getElementById('searchInput').addEventListener('input', function() {
+        loadUsers(1, this.value);
     });
 
-    $('#newUserBtn').click(function() {
-        // Mostrar formulario para nuevo usuario
+    document.getElementById('newUserBtn').addEventListener('click', function() {
+        $('#userForm')[0].reset();
+        $('#userId').val('');
+        $('#userModal').show();
     });
 
-    $('#userTableBody').on('click', '.editBtn', function() {
-        const userId = $(this).data('id');
-        // Mostrar datos del usuario en el formulario para editar
+    document.getElementById('userTableBody').addEventListener('click', function(e) {
+        if (e.target.classList.contains('editBtn')) {
+            const userId = e.target.dataset.id;
+            
+            $.ajax({
+                url: `user_app/user_api.php?action=get&id=${userId}`,
+                type: 'GET',
+                success: function(user) {
+                    $('#userId').val(user.id);
+                    $('#dni').val(user.dni);
+                    $('#full_name').val(user.full_name);
+                    $('#birth_date').val(user.birth_date);
+                    $('#phone').val(user.phone);
+                    $('#email').val(user.email);
+                    $('#userModal').show();
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching user data: ", status, error);
+                }
+            });
+        }
+    });
+
+    $('#userForm').on('submit', function(event) {
+        event.preventDefault();
+
+        const formData = $(this).serialize();
+        const action = $('#userId').val() ? 'update' : 'create';
+
+        $.ajax({
+            url: `user_app/user_api.php?action=${action}`,
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                loadUsers();
+                $('#userModal').hide();
+            },
+            error: function(xhr, status, error) {
+                console.error("Error creating/updating user: ", status, error);
+                console.log(xhr.responseText);
+            }
+        });
     });
 
     loadUsers();
