@@ -69,18 +69,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     $('#userForm').on('submit', function(event) {
         event.preventDefault();
-    
+
         const dni = $('#dni').val().trim();
         const fullName = $('#full_name').val().trim();
         const birthDate = $('#birth_date').val().trim();
         const phone = $('#phone').val().trim();
         const email = $('#email').val().trim();
-    
+
+        // Validaciones
         if (!dni || !fullName || !birthDate) {
             alert('Los campos DNI, Nombre Completo y Fecha de Nacimiento son obligatorios.');
             return;
         }
-        if (dni.length !== 9) {
+        if (dni.length !== 9) {  // Ajustar a 9 caracteres si es necesario
             alert('El DNI debe tener exactamente 9 caracteres.');
             return;
         }
@@ -101,8 +102,8 @@ document.addEventListener('DOMContentLoaded', function() {
             type: 'POST',
             data: formData,
             success: function(response) {
-                loadUsers();
-                $('#userModal').hide();
+                loadUsers(); // Recargar la lista de usuarios
+                $('#userModal').hide(); // Ocultar el modal
             },
             error: function(xhr, status, error) {
                 console.error("Error creating/updating user: ", status, error);
@@ -115,6 +116,5 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#userModal').hide();
     });
 
-    loadUsers();
+    loadUsers(); // Cargar usuarios al inicio
 });
-
