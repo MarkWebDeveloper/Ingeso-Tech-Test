@@ -70,7 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
     $('#userForm').on('submit', function(event) {
         event.preventDefault();
 
-        // Validate required fields
         const dni = $('#dni').val();
         const fullName = $('#full_name').val();
         const birthDate = $('#birth_date').val();
@@ -84,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const action = $('#userId').val() ? 'update' : 'create';
 
         $.ajax({
-            url: `user_app/user_api.php?action=${action}`,
+            url: `http://localhost/user_app/user_api.php?action=${action}`,
             type: 'POST',
             data: formData,
             success: function(response) {
@@ -98,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Close the modal
     document.getElementById('closeModal').addEventListener('click', function() {
         $('#userModal').hide();
     });
