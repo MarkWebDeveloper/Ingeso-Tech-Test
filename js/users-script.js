@@ -69,13 +69,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     $('#userForm').on('submit', function(event) {
         event.preventDefault();
-
-        const dni = $('#dni').val();
-        const fullName = $('#full_name').val();
-        const birthDate = $('#birth_date').val();
-
+    
+        const dni = $('#dni').val().trim();
+        const fullName = $('#full_name').val().trim();
+        const birthDate = $('#birth_date').val().trim();
+        const phone = $('#phone').val().trim();
+        const email = $('#email').val().trim();
+    
         if (!dni || !fullName || !birthDate) {
             alert('Los campos DNI, Nombre Completo y Fecha de Nacimiento son obligatorios.');
+            return;
+        }
+        if (dni.length !== 9) {
+            alert('El DNI debe tener exactamente 9 caracteres.');
+            return;
+        }
+        if (birthDate.length !== 10) {
+            alert('La fecha de nacimiento debe tener el formato YYYY-MM-DD (10 caracteres).');
+            return;
+        }
+        if (phone.length > 15) {
+            alert('El teléfono no debe exceder los 15 caracteres.');
             return;
         }
 
