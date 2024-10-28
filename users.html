@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User List</title>
+    <link rel="stylesheet" href="path_to_bootstrap.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h2 class="mt-4">Listado de Usuarios</h2>
+    <div class="mb-3">
+        <button id="newUserBtn" class="btn btn-primary">Nuevo Usuario</button>
+        <input type="text" id="searchInput" class="form-control mt-2" placeholder="Buscar usuario...">
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>DNI</th>
+                <th>Nombre Completo</th>
+                <th>Fecha Nacimiento</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="userTableBody">
+            <!-- Los usuarios se cargarán aquí -->
+        </tbody>
+    </table>
+    <button id="loadMoreBtn" class="btn btn-secondary">Cargar más</button>
+</div>
+
+<!-- Modal para agregar/editar usuario -->
+<div id="userModal" class="modal">
+    <div class="modal-content">
+        <form id="userForm">
+            <!-- Campos de formulario -->
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+    </div>
+</div>
+
+<script src="users-script.js"></script>
+</body>
+</html>
