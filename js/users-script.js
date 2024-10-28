@@ -3,11 +3,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function loadUsers(page = 1, search = '') {
         $.ajax({
-            url: 'http://localhost/user_app/user_api.php?action=list&page=1&search=',
+            url: `http://localhost/user_app/user_api.php?action=list&page=${page}&search=${search}`,
             type: 'GET',
             success: function(users) {
                 $('#userTableBody').empty();
-        
                 users.forEach(user => {
                     $('#userTableBody').append(`
                         <tr>
@@ -40,15 +39,16 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('newUserBtn').addEventListener('click', function() {
         $('#userForm')[0].reset();
         $('#userId').val('');
+        $('#modalTitle').text('Agregar Usuario');
         $('#userModal').show();
     });
 
     document.getElementById('userTableBody').addEventListener('click', function(e) {
         if (e.target.classList.contains('editBtn')) {
             const userId = e.target.dataset.id;
-            
+
             $.ajax({
-                url: `user_app/user_api.php?action=get&id=${userId}`,
+                url: `http://localhost/user_app/user_api.php?action=get&id=${userId}`,
                 type: 'GET',
                 success: function(user) {
                     $('#userId').val(user.id);
@@ -57,6 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     $('#birth_date').val(user.birth_date);
                     $('#phone').val(user.phone);
                     $('#email').val(user.email);
+                    $('#modalTitle').text('Modificar Usuario');
                     $('#userModal').show();
                 },
                 error: function(xhr, status, error) {
@@ -68,6 +69,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     $('#userForm').on('submit', function(event) {
         event.preventDefault();
+
+        // Validate required fields
+        const dni = $('#dni').val();
+        const fullName = $('#full_name').val();
+        const birthDate = $('#birth_date').val();
+
+        if (!dni || !fullName || !birthDate) {
+            alert('Los campos DNI, Nombre Completo y Fecha de Nacimiento son obligatorios.');
+            return;
+        }
 
         const formData = $(this).serialize();
         const action = $('#userId').val() ? 'update' : 'create';
@@ -87,5 +98,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Close the modal
+    document.getElementById('closeModal').addEventListener('click', function() {
+        $('#userModal').hide();
+    });
+
     loadUsers();
 });
+

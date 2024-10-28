@@ -1,7 +1,7 @@
 <?php
-header("Access-Control-Allow-Origin: *"); // Allow requests from any origin
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS"); // Allow specific methods
-header("Access-Control-Allow-Headers: Content-Type"); // Allow specific headers
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -20,6 +20,19 @@ if ($conn->connect_error) {
 }
 
 $action = $_GET['action'] ?? '';
+
+if ($action == 'get') {
+    $id = $_GET['id'];
+    $sql = "SELECT * FROM users WHERE id = $id";
+    $result = $conn->query($sql);
+
+    if ($result && $result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        echo json_encode($user);
+    } else {
+        echo json_encode(["error" => "User not found."]);
+    }
+}
 
 if ($action == 'list') {
     $page = $_GET['page'] ?? 1;
